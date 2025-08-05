@@ -55,6 +55,19 @@
         const style = document.createElement('style');
         style.id = 'sitemap-styles';
         style.textContent = `
+         /* === ABE'S FIX: CSS ISOLATION === */
+        #recentpostsae, #recentpostsae * {
+            all: revert; /* Resets styles to the browser's default, preventing theme conflicts */
+        }
+        #recentpostsae {
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+        }
+        #recentpostsae * {
+             box-sizing: inherit;
+        }
+        /* === END OF FIX === */
             /* Label Navigation */
             .label-nav {
                 display: flex;

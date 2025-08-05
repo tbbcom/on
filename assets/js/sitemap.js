@@ -13,7 +13,7 @@
         blogUrl: 'https://www.thebukitbesi.com',
         postsPerLabel: 10, // Increased for 5-column layout
         imageSize: 250, // Larger thumbnail for better quality
-        defaultThumb: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="250" height="250" viewBox="0 0 250 250"%3E%3Crect width="400" height="250" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E',
+        defaultThumb: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="250" height="250" viewBox="0 0 250 250"%3E%3Crect width="250" height="250" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E',
         maxLabels: 20, // Increased for better categorization
         excerptLength: 60,
         cacheExpiry: 3600000 // 1 hour cache

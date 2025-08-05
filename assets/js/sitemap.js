@@ -159,7 +159,7 @@
                 gap: 25px;
                 margin: 30px auto;
                 padding: 0 20px;
-                max-width: 1400px;
+                max-width: 900px;
             }
             
             /* Post Card */

@@ -13,9 +13,9 @@
         blogUrl: 'https://www.thebukitbesi.com',
         postsPerLabel: 10, // Increased for 5-column layout
         imageSize: 400, // Larger thumbnail for better quality
-        defaultThumb: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E',
-        maxLabels: 25, // Increased for better categorization
-        excerptLength: 150,
+        defaultThumb: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"%3E%3Crect width="400" height="200" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E',
+        maxLabels: 20, // Increased for better categorization
+        excerptLength: 60,
         cacheExpiry: 3600000 // 1 hour cache
     };
     
@@ -139,7 +139,7 @@
                 border-radius: 2px;
             }
             
-            /* Posts Grid - 5 columns desktop */
+            /* Posts Grid - 3 columns desktop */
             .posts-grid {
                 display: grid;
                 grid-template-columns: repeat(5, 1fr);
@@ -680,7 +680,7 @@
                         <div class="post-meta">
                             <time class="post-date" datetime="${post.published.toISOString()}">${date}</time>
                             <a href="${post.url}" class="read-more" aria-label="Read more about ${escapeHtml(post.title)}">
-                                Baca Lagi →
+                                Read More →
                             </a>
                         </div>
                     </div>
@@ -706,7 +706,7 @@
     function formatDate(date) {
         const months = [
             'Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun',
-            'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'
+            'Jul', 'Ogos', 'Sep', 'Okt', 'Nov', 'Dis'
         ];
         
         return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;

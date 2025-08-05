@@ -152,14 +152,14 @@
                 border-radius: 2px;
             }
             
-            /* Posts Grid - 3 columns desktop */
+            /* Posts Grid - 5 columns desktop (Fluid) */
             .posts-grid {
-                display: grid;
-                grid-template-columns: repeat(5, 1fr);
-                gap: 25px;
-                margin: 30px auto;
-                padding: 0 20px;
-                max-width: 900px;
+            display: grid;grid-template-columns: repeat(5, 1fr);
+            gap: 20px; /* Slightly reduced gap for better fitting */
+            margin: 30px auto;
+            padding: 0 10px; /* Adjusted padding */
+            width: 100%;
+            max-width: 100%; /* Make it fluid to fit the container */
             }
             
             /* Post Card */

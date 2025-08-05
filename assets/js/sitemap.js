@@ -303,7 +303,7 @@
                     padding: 0 15px;
                 }
                 .post-thumb {
-                    height: 180px;
+                    height: 200px;
                 }
             }
             @media (max-width: 480px) {

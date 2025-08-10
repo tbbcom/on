@@ -2,7 +2,6 @@
 
 (function() {
     // --- Library Imports via CDN ---
-    // These are loaded dynamically, no need to add them to your HTML
     const PRETTIER_CDN = "https://unpkg.com/prettier@2.8.4/standalone.js";
     const HTML_PARSER_CDN = "https://unpkg.com/prettier@2.8.4/parser-html.js";
     const DOMPURIFY_CDN = "https://unpkg.com/dompurify@3.0.1/dist/purify.min.js";
@@ -21,13 +20,10 @@
     const modeConvertRadio = getEl('mode-convert');
 
     // --- Dynamic Library Loader ---
-    // Loads libraries on demand to keep initial page load fast
     const loadedScripts = {};
     function loadScript(src) {
         return new Promise((resolve, reject) => {
-            if (loadedScripts[src]) {
-                return resolve();
-            }
+            if (loadedScripts[src]) return resolve();
             const script = document.createElement('script');
             script.src = src;
             script.onload = () => {
@@ -41,65 +37,34 @@
 
     // --- Core Functions ---
     async function formatHtml(rawHtml, shouldClean) {
-        try {
-            await Promise.all([
-                loadScript(PRETTIER_CDN),
-                loadScript(HTML_PARSER_CDN),
-                loadScript(DOMPURIFY_CDN)
-            ]);
-            
-            let htmlToFormat = rawHtml;
-            if (shouldClean) {
-                // DOMPurify removes anything that could be a security risk,
-                // like <script> tags, onclick events, etc.
-                htmlToFormat = DOMPurify.sanitize(rawHtml);
-                showStatus('HTML sanitized.', 'success');
-            }
+        await Promise.all([loadScript(PRETTIER_CDN), loadScript(HTML_PARSER_CDN)]);
+        if (shouldClean) await loadScript(DOMPURIFY_CDN);
 
-            // Prettier formats the code beautifully
-            return prettier.format(htmlToFormat, {
-                parser: "html",
-                plugins: prettierPlugins,
-                printWidth: 100,
-                tabWidth: 2,
-                useTabs: false,
-            });
-        } catch (error) {
-            showStatus(`Formatting Error: ${error.message}`, 'error');
-            throw error;
+        let htmlToFormat = rawHtml;
+        if (shouldClean && window.DOMPurify) {
+            htmlToFormat = DOMPurify.sanitize(rawHtml);
         }
+
+        return prettier.format(htmlToFormat, {
+            parser: "html",
+            plugins: prettierPlugins,
+            printWidth: 100,
+            tabWidth: 2,
+            useTabs: false,
+        });
     }
 
     async function convertTextToHtml(text) {
-        try {
-            await Promise.all([
-                loadScript(MARKED_CDN),
-                loadScript(PRETTIER_CDN),
-                loadScript(HTML_PARSER_CDN)
-            ]);
-
-            // Marked converts Markdown-style text to raw HTML
-            const rawHtml = marked.parse(text
-                .replace(/^# /gm, '<h1>')
-                .replace(/^## /gm, '<h2>')
-                .replace(/^### /gm, '<h3>')
-                .replace(/\n/g, '<br>') // Basic paragraph handling
-            );
-
-            // Then we beautify that HTML with Prettier
-            return formatHtml(rawHtml, false); // No need to clean generated HTML
-        } catch (error) {
-            showStatus(`Conversion Error: ${error.message}`, 'error');
-            throw error;
-        }
+        await Promise.all([loadScript(MARKED_CDN), loadScript(PRETTIER_CDN), loadScript(HTML_PARSER_CDN)]);
+        const rawHtml = marked.parse(text);
+        return formatHtml(rawHtml, false);
     }
 
     // --- UI & Event Handlers ---
     function showStatus(message, type = 'info') {
         statusMessageEl.textContent = message;
-        statusMessageEl.className = `status-${type}`;
+        statusMessageEl.className = `status-${type} show`;
         setTimeout(() => {
-            statusMessageEl.textContent = '';
             statusMessageEl.className = '';
         }, 3000);
     }
@@ -123,9 +88,9 @@
                 result = await convertTextToHtml(input);
             }
             outputCodeEl.value = result;
-            showStatus('Processing complete!', 'success');
+            if (result) showStatus('Processing complete!', 'success');
         } catch (error) {
-            // Error is already shown by the core functions
+            showStatus(`Error: ${error.message}`, 'error');
             console.error(error);
         } finally {
             processBtn.disabled = false;
@@ -143,10 +108,9 @@
         });
     });
     
-    // Toggle options based on mode
     [modeBeautifyRadio, modeConvertRadio].forEach(radio => {
         radio.addEventListener('change', () => {
-            beautifyOptionsEl.style.display = modeBeautifyRadio.checked ? 'block' : 'none';
+            beautifyOptionsEl.style.display = modeBeautifyRadio.checked ? 'flex' : 'none';
             inputCodeEl.placeholder = modeBeautifyRadio.checked 
                 ? '' 
                 : 'Type plain text or markdown here...';

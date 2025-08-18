@@ -1,1 +1,39 @@
-pwa
+{
+  "name": "The Bukit Besi",
+  "short_name": "BukitBesi",
+  "start_url": "https://www.thebukitbesi.com",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#4f26e2",
+  "description": "Maklumat dan Persekitaran",
+  "icons": [{
+    "src": "https://1.bp.blogspot.com/-snR5cHyBs6A/X7qd-qKL2NI/AAAAAAAADdY/oQ7dYy71oKUvIkjMO2jwA1snHzNstGUDACLcBGAsYHQ/s48/icon-48.png",
+    "sizes": "48x48",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-sxVeYn6gAZM/X7qd-17aGSI/AAAAAAAADdc/R7-pEz74zZg24B0nplunVc-1DFFl_RG9QCLcBGAsYHQ/s72/icon-72.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-H-cUNoT1vM0/X7qd_EF96sI/AAAAAAAADdg/VRV2dhXBYlsVm7gmxPin7r19uT9ib0N4wCLcBGAsYHQ/s96/icon-96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-bdBqAl3XPEY/X7qd92V-_SI/AAAAAAAADdM/E3CvxKxgeU4ApUMOh14HOIdslcyTkst7gCLcBGAsYHQ/s144/icon-144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-tfMxAZyD6fU/X7qd9-9siNI/AAAAAAAADdQ/psAVHtI7v4w-EwLofe7hcuoAE998hokvwCLcBGAsYHQ/s168/icon-168.png",
+    "sizes": "168x168",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-lpctr9nPIkY/X7qd-PzN-kI/AAAAAAAADdU/6SvnWH999KIu2hdhuycY0HEbt7zl7b6kACLcBGAsYHQ/s192/icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }, {
+    "src": "https://1.bp.blogspot.com/-a7NhVtL0HdE/X7qd_kej3oI/AAAAAAAADdk/GawiknNfcRYipZb4XdniS3sYkAqscr-GACLcBGAsYHQ/s512/logo.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
+

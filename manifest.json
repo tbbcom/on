@@ -23,7 +23,7 @@
     "sizes": "144x144",
     "type": "image/png"
   }, {
-    "src": "https://github.com/tbbcom/on/blob/main/pwa-assets/src/icon-168.png",
+    "src": "https://cdn.jsdelivr.net/gh/tbbcom/on@main/pwa-assets/src/icon-168.png",
     "sizes": "168x168",
     "type": "image/png"
   }, {

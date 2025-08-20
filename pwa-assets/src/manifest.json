@@ -1,0 +1,23 @@
+{
+  "name": "The Bukit Besi Blog",
+  "short_name": "Bukit Besi",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#FFF",
+  "theme_color": "#2563eb",
+  "description": "Exploring trends in lifestyle, Bukit Besi, tutorial, SEO, AI, and development from Malaysia to the world.",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/tbbcom/on@main/pwa-assets/src/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/gh/tbbcom/on@main/pwa-assets/src/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+.imeta-container {
+  line-height: 1.6;
+}
+.imeta-section {
+  margin-bottom: 1.2rem;
+}
+.imeta-input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.imeta-input:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+.imeta-progress {
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.imeta-progress-bar {
+  height: 100%;
+  transition: all 0.4s ease;
+}
+.imeta-serp {
+  border: 1px solid #eee;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f9f9f9;
+  font-size: 0.95rem;
+  font-family: monospace;
+}
+.serp-title {
+  color: #1a0dab;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+.serp-url {
+  color: #006621;
+  font-size: 0.9rem;
+  margin: 0.3rem 0;
+}
+.serp-desc {
+  color: #545454;
+  font-size: 0.95rem;
+  margin: 0;
+}
+.ibtn {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.ibtn:hover {
+  background: #0055aa;
+}
+.imeta-suggestions {
+  color: #333;
+  padding-left: 1.2rem;
+}
+.imeta-suggestions li {
+  margin-bottom: 0.4rem;
+}

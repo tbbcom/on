@@ -1,0 +1,11 @@
+/* Cartoonizer Fix v5.0.1 — hide drop icon, center layout, shrink mobile sticky bar */
+#ctoon-app-wrapper .ctoon-drop-icon{display:none!important;width:0;height:0}
+#ctoon-app-wrapper{box-sizing:border-box;max-width:980px;margin-inline:auto!important}
+#ctoon-app-wrapper #ctoon-app,#ctoon-app-wrapper .ctoon-layout,#ctoon-app-wrapper .ctoon-header,#ctoon-app-wrapper .ctoon-content-wrap{margin-left:auto!important;margin-right:auto!important;max-width:100%}
+#ctoon-app-wrapper .ctoon-sticky{max-width:680px;margin:.5rem auto 0;left:0;right:0;bottom:.6rem;padding:.4rem .5rem;border-radius:12px;gap:.45rem;grid-auto-flow:column;grid-template-columns:none;justify-content:center;align-items:center}
+#ctoon-app-wrapper .ctoon-sticky .ibtn,#ctoon-app-wrapper .ctoon-sticky .ibutton{font-size:.90rem;padding:.45rem .7rem;border-radius:10px;white-space:nowrap;min-width:unset}
+#ctoon-app-wrapper .ctoon-sticky-upload{background:#fff;color:var(--c-text-primary);border-color:#d1d5db}
+@media (max-width:420px){#ctoon-app-wrapper .ctoon-sticky{bottom:.5rem;gap:.35rem;padding:.35rem .45rem}#ctoon-app-wrapper .ctoon-sticky .ibtn,#ctoon-app-wrapper .ctoon-sticky .ibutton{font-size:.82rem;padding:.4rem .6rem}}
+#ctoon-app-wrapper .ctoon-canvas-wrap{margin-inline:auto}
+/* smaller compare thumb on small phones */
+@media (max-width:480px){#ctoon-app-wrapper .ctoon-compare::-webkit-slider-thumb{width:28px;height:28px;background-size:14px 14px}#ctoon-app-wrapper .ctoon-compare::-moz-range-thumb{width:28px;height:28px}}

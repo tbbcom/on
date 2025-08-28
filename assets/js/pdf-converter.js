@@ -185,7 +185,7 @@
   }
   async function needDocxLib() {
     if (!window.docx) {
-      await loadScript('https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.min.js');
+      await loadScript('https://cdn.jsdelivr.net/npm/docx@8.5.0/dist/docx.min.js');
     }
     return true;
   }

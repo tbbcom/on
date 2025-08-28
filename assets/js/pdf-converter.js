@@ -24,7 +24,7 @@
 
     // --- DOM Elements & State ---
     const els = {
-        root: document.getElementById('ix-any2pdf'),
+        root: document.getElementById('ix-pdfconverter'),
         drop: document.getElementById('ix-drop'),
         file: document.getElementById('ix-file'),
         to: document.getElementById('ix-to'),

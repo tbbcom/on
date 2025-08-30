@@ -234,13 +234,14 @@
   const fullBtn = $('#ib-full', app);
   fullBtn.addEventListener('click', async () => {
     try {
-      if (!document.fullscreenElement) { await app.requestFullscreen(); fullBtn.textContent = 'Exit Fullscreen'; }
-      else { await document.exitFullscreen(); fullBtn.textContent = 'Fullscreen'; }
-    } catch {}
-  });
-  document.addEventListener('fullscreenchange', () => {
-    fullBtn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
-  });
+      document.addEventListener('fullscreenchange', () => {
+  const isFS = document.fullscreenElement === app;
+  fullBtn.textContent = isFS ? 'Exit Fullscreen' : 'Fullscreen';
+
+  // Force light theme in fullscreen for max readability on mobile
+  if (isFS) app.setAttribute('data-theme','light');
+  else app.removeAttribute('data-theme'); // fall back to system (or your site) preference
+});
 
   // MD toggle
   const mdBtn = $('#ib-md-toggle', app);

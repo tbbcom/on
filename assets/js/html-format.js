@@ -65,52 +65,11 @@ function minifyHTML(html) {
 
 // Function to copy text to clipboard
 function copyToClipboard(text) {
-    // Use temporary textarea element
-    let textArea = document.createElement("textarea");
-    textArea.value = text;
-
-    // Make it readonly to be safe.
-    textArea.setAttribute('readonly', '');
-    // Hide it off-screen
-    textArea.style.position = 'absolute';
-    textArea.style.left = '-9999px';
-
-    document.body.appendChild(textArea);
-    textArea.focus();
-
-    // Check if the browser supports Clipboard API
-    if (navigator.clipboard && textArea.value) {
-      navigator.clipboard.writeText(textArea.value)
-        .then(() => {
-           // Success feedback (optional)
-           // alert('Copied!');
-        })
-        .catch(err => {
-          console.error('Clipboard API error:', err);
-          // Fallback for older browsers might be needed if Clipboard API fails
-          try {
-            textArea.select();
-            document.execCommand('copy');
-            // alert('Copied (fallback)!');
-          } catch (err2) {
-            console.error('Fallback copy error:', err2);
-            alert('Failed to copy. Please copy manually.');
-          }
-        });
-    } else {
-        // Fallback for browsers without Clipboard API
-        try {
-           textArea.select();
-           document.execCommand('copy');
-           // alert('Copied (fallback)!');
-        } catch (err) {
-          console.error('Fallback copy error:', err);
-          alert('Failed to copy. Please copy manually.');
-        }
+    if (!navigator.clipboard) {
+        alert('Clipboard API not supported in this browser.');
+        return Promise.reject(new Error('Clipboard API not supported'));
     }
-
-    // Clean up the temporary element
-    document.body.removeChild(textArea);
+    return navigator.clipboard.writeText(text);
 }
 
 
@@ -158,13 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
      if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             if (outputTextArea && outputTextArea.value) {
-                copyToClipboard(outputTextArea.value);
-                // Optional: Provide user feedback
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                }, 1500);
+                copyToClipboard(outputTextArea.value)
+                    .then(() => {
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 1500);
+                    })
+                    .catch(() => {
+                        alert('Failed to copy to clipboard.');
+                    });
             }
         });
     }

@@ -1,14 +1,14 @@
 (function() {
     // --- Element Cache ---
-    const urlInput = document.getElementById('githubUrl') as HTMLInputElement;
-    const outputDiv = document.getElementById('outputLink') as HTMLDivElement;
-    const messageDiv = document.getElementById('message') as HTMLDivElement;
-    const generateBtn = document.getElementById('generateBtn') as HTMLButtonElement;
-    const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
+    const urlInput = document.getElementById('githubUrl');
+    const outputDiv = document.getElementById('outputLink');
+    const messageDiv = document.getElementById('message');
+    const generateBtn = document.getElementById('generateBtn');
+    const clearBtn = document.getElementById('clearBtn');
 
     // --- Core Functions ---
 
-    function showMessage(text: string, type = 'error') {
+    function showMessage(text, type = 'error') {
         messageDiv.textContent = text;
         messageDiv.className = `message ${type}`;
         messageDiv.style.display = 'block';
@@ -31,7 +31,7 @@
             return;
         }
 
-        let user: string, repo: string, branch: string, filePath: string;
+        let user, repo, branch, filePath;
 
         if (input.includes('raw.githubusercontent.com')) {
             // RAW link: https://raw.githubusercontent.com/user/repo/branch/path/to/file
@@ -85,7 +85,7 @@
         `;
     }
 
-    function copyLink(url: string, buttonElement: HTMLElement) {
+    function copyLink(url, buttonElement) {
         if (!navigator.clipboard) {
             prompt('Could not copy automatically. Please copy this link:', url);
             return;
@@ -93,10 +93,10 @@
         navigator.clipboard.writeText(url).then(() => {
             const originalText = buttonElement.textContent;
             buttonElement.textContent = 'Copied!';
-            (buttonElement as HTMLButtonElement).disabled = true;
+            buttonElement.disabled = true;
             setTimeout(() => {
                 buttonElement.textContent = originalText;
-                (buttonElement as HTMLButtonElement).disabled = false;
+                buttonElement.disabled = false;
             }, 2000);
         }).catch(err => {
             prompt('Copy failed. Please copy this link manually:', url);
@@ -115,9 +115,9 @@
     });
 
     outputDiv.addEventListener('click', function(event) {
-        const target = event.target as HTMLElement;
+        const target = event.target;
         if (target && target.id === 'copyBtn') {
-            const urlToCopy = target.dataset.url!;
+            const urlToCopy = target.dataset.url;
             copyLink(urlToCopy, target);
         }
     });

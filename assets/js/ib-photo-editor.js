@@ -1,4 +1,5 @@
 /* IB Photo Studio v1.2 — vanilla JS, Blogger-safe (no deps) */
+/* Copyright of The Bukit Besi via https://thebukitbesi.com/p/online-photoshop.html */
 (() => {
   const $  = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));

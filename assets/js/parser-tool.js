@@ -1,31 +1,31 @@
 (function() {
-    var root = document.getElementById('parser-unparser');
+    const root = document.getElementById('parser-unparser');
     if (!root) return;
-    var $ = function(sel) { return root.querySelector(sel); };
+    const $ = function(sel) { return root.querySelector(sel); };
 
     // --- Elements ---
-    var inEl = $('#pu-in'),
+    const inEl = $('#pu-in'),
         outEl = $('#pu-out');
-    var inStats = $('#pu-in-stats'),
+    const inStats = $('#pu-in-stats'),
         outStats = $('#pu-out-stats');
-    var statusEl = $('#pu-status'),
+    const statusEl = $('#pu-status'),
         fb = $('#pu-feedback');
-    var modeSel = $('#pu-mode');
-    var parseBtn = $('#pu-parse'),
+    const modeSel = $('#pu-mode');
+    const parseBtn = $('#pu-parse'),
         unparseBtn = $('#pu-unparse');
-    var copyBtn = $('#pu-copy'),
+    const copyBtn = $('#pu-copy'),
         dlBtn = $('#pu-download'),
         swapBtn = $('#pu-swap'),
         clearBtn = $('#pu-clear');
 
     // --- Options ---
-    var optJson = { indent: $('#pu-json-indent'), sort: $('#pu-json-sort') };
-    var optCsv = { delim: $('#pu-csv-delim'), quote: $('#pu-csv-quote'), header: $('#pu-csv-header'), eol: $('#pu-eol') };
-    var optKv = { pair: $('#pu-kv-pair'), kv: $('#pu-kv-delim') };
-    var optQuery = { sort: $('#pu-query-sort'), space: $('#pu-query-space') };
-    var optUrl = { mode: $('#pu-url-mode') };
+    const optJson = { indent: $('#pu-json-indent'), sort: $('#pu-json-sort') };
+    const optCsv = { delim: $('#pu-csv-delim'), quote: $('#pu-csv-quote'), header: $('#pu-csv-header'), eol: $('#pu-eol') };
+    const optKv = { pair: $('#pu-kv-pair'), kv: $('#pu-kv-delim') };
+    const optQuery = { sort: $('#pu-query-sort'), space: $('#pu-query-space') };
+    const optUrl = { mode: $('#pu-url-mode') };
 
-    var boxes = {
+    const boxes = {
         json: $('.pu-opt-json'),
         csv: $('.pu-opt-csv'),
         kv: $('.pu-opt-kv'),
@@ -34,8 +34,8 @@
     };
 
     function showOptionsFor(mode) {
-        for (var k in boxes) boxes[k].classList.remove('show');
-        var boxToShow = (mode === 'csv' || mode === 'tsv') ? 'csv' : mode;
+        for (const k in boxes) boxes[k].classList.remove('show');
+        const boxToShow = (mode === 'csv' || mode === 'tsv') ? 'csv' : mode;
         if (boxes[boxToShow]) boxes[boxToShow].classList.add('show');
         
         // Handle TSV delimiter logic
@@ -72,7 +72,7 @@
     function sortKeysDeep(v) {
         if (Array.isArray(v)) return v.map(sortKeysDeep);
         if (v && typeof v === 'object') {
-            var out = {};
+            const out = {};
             Object.keys(v).sort().forEach(function(k) { out[k] = sortKeysDeep(v[k]); });
             return out;
         }
@@ -80,14 +80,14 @@
     }
 
     // --- Parsers (Text -> Object) ---
-    var parsers = {
+    const parsers = {
         json: (text) => JSON.parse(text),
         query: (text) => {
-            var q = text || '';
-            var idx = q.indexOf('?');
+            let q = text || '';
+            const idx = q.indexOf('?');
             if (idx >= 0) q = q.slice(idx + 1);
-            var params = new URLSearchParams(q);
-            var obj = {};
+            const params = new URLSearchParams(q);
+            const obj = {};
             params.forEach(function(val, key) {
                 if (obj.hasOwnProperty(key)) {
                     if (!Array.isArray(obj[key])) obj[key] = [obj[key]];
@@ -99,9 +99,10 @@
         csv: (text, delim, quote, header) => {
             delim = normalizeDelim(delim);
             quote = (quote && quote.length) ? quote[0] : '"';
-            var rows = [], cur = '', row = [], inQ = false, i = 0, s = text || '';
+            const rows = [], s = text || '';
+            let cur = '', row = [], inQ = false, i = 0;
             while (i < s.length) {
-                var ch = s[i];
+                const ch = s[i];
                 if (inQ) {
                     if (ch === quote) {
                         if (s[i + 1] === quote) { cur += quote; i++; } 
@@ -119,9 +120,9 @@
             }
             if (cur.length || row.length) { row.push(cur); rows.push(row); }
             if (!header || !rows.length) return rows;
-            var head = rows.shift(), out = [];
+            const head = rows.shift(), out = [];
             rows.forEach(function(r) {
-                var obj = {};
+                const obj = {};
                 head.forEach(function(h, c) {
                     obj[h != null ? String(h) : ('col' + (c + 1))] = r[c] != null ? r[c] : '';
                 });
@@ -130,17 +131,18 @@
             return out;
         },
         ini: (text) => {
-            var obj = {}, currentSection = obj;
+            const obj = {};
+            let currentSection = obj;
             (text || '').split(/\r?\n/).forEach(function(line) {
-                var s = line.trim();
+                const s = line.trim();
                 if (!s || s.startsWith(';') || s.startsWith('#')) return;
-                var m = s.match(/^\[(.+?)\]$/); // *** CRITICAL FIX HERE ***
+                const m = s.match(/^\[(.+?)\]$/); // *** CRITICAL FIX HERE ***
                 if (m) {
                     currentSection = obj[m[1]] = obj[m[1]] || {};
                 } else {
-                    var idx = s.indexOf('=');
+                    const idx = s.indexOf('=');
                     if (idx > -1) {
-                        var k = s.slice(0, idx).trim(), v = s.slice(idx + 1).trim();
+                        const k = s.slice(0, idx).trim(), v = s.slice(idx + 1).trim();
                         currentSection[k] = v;
                     }
                 }
@@ -148,15 +150,15 @@
             return obj;
         },
         kv: (text, pairDelim, kvDelim) => {
-            var pd = pairDelim === '\\n' ? '\n' : pairDelim;
-            var lines = (text || '').split(pd === '\n' ? /\r\n|\r|\n/ : pd);
-            var obj = {};
+            const pd = pairDelim === '\\n' ? '\n' : pairDelim;
+            const lines = (text || '').split(pd === '\n' ? /\r\n|\r|\n/ : pd);
+            const obj = {};
             lines.forEach(function(line) {
-                var s = String(line).trim();
+                const s = String(line).trim();
                 if (!s) return;
-                var idx = s.indexOf(kvDelim);
+                const idx = s.indexOf(kvDelim);
                 if (idx > -1) {
-                    var k = s.slice(0, idx).trim(), v = s.slice(idx + 1).trim();
+                    const k = s.slice(0, idx).trim(), v = s.slice(idx + 1).trim();
                     obj[k] = v;
                 }
             });
@@ -165,25 +167,25 @@
     };
 
     // --- Stringifiers (Object -> Text) ---
-    var stringifiers = {
+    const stringifiers = {
         json: (obj, indent, sort) => {
-            var data = sort ? sortKeysDeep(obj) : obj;
+            const data = sort ? sortKeysDeep(obj) : obj;
             return JSON.stringify(data, null, Math.max(0, Math.min(8, indent)));
         },
         query: (obj, sort, spaceEnc) => {
             if (!obj || typeof obj !== 'object') return '';
-            var keys = Object.keys(obj);
+            const keys = Object.keys(obj);
             if (sort) keys.sort();
-            var parts = [];
+            const parts = [];
             keys.forEach(function(k) {
-                var v = obj[k];
-                var pushKV = function(key, val) {
-                    var ek = encodeURIComponent(key);
-                    var ev = encodeURIComponent(val == null ? '' : String(val));
+                const v = obj[k];
+                const pushKV = function(key, val) {
+                    const ek = encodeURIComponent(key);
+                    let ev = encodeURIComponent(val == null ? '' : String(val));
                     if (spaceEnc === '+') { ev = ev.replace(/%20/g, '+'); }
                     parts.push(ek + '=' + ev);
                 };
-                if (Array.isArray(v)) { v.forEach(item => pushKV(k, item)); } 
+                if (Array.isArray(v)) { v.forEach(item => pushKV(k, item)); }
                 else { pushKV(k, v); }
             });
             return parts.join('&');
@@ -192,30 +194,30 @@
             delim = normalizeDelim(delim);
             quote = (quote && quote.length) ? quote[0] : '"';
             eol = eol || '\n';
-            var rows = [];
+            let rows = [];
             if (!Array.isArray(data)) data = [];
 
             if (data.length && typeof data[0] === 'object' && !Array.isArray(data[0])) {
-                var cols = Object.keys(data.reduce((res, row) => ({...res, ...row }), {}));
+                const cols = Object.keys(data.reduce((res, row) => ({...res, ...row }), {}));
                 if (header) rows.push(cols);
                 data.forEach(o => rows.push(cols.map(k => o[k] == null ? '' : String(o[k]))));
             } else {
                 rows = data.map(row => Array.isArray(row) ? row : [row]);
             }
-            var esc = (cell) => {
-                var strCell = String(cell);
-                var mustQuote = strCell.includes(delim) || strCell.includes('\n') || strCell.includes('\r') || strCell.includes(quote);
+            const esc = (cell) => {
+                const strCell = String(cell);
+                const mustQuote = strCell.includes(delim) || strCell.includes('\n') || strCell.includes('\r') || strCell.includes(quote);
                 return mustQuote ? `${quote}${strCell.replace(new RegExp(quote, 'g'), quote + quote)}${quote}` : strCell;
             };
             return rows.map(r => r.map(esc).join(delim)).join(eol);
         },
         ini: (obj, eol) => {
             eol = eol || '\n';
-            var top = [], sections = [];
+            const top = [], sections = [];
             Object.keys(obj || {}).forEach(function(k) {
-                var v = obj[k];
+                const v = obj[k];
                 if (v && typeof v === 'object' && !Array.isArray(v)) {
-                    var lines = ['[' + k + ']'];
+                    const lines = ['[' + k + ']'];
                     Object.keys(v).forEach(function(kk) { lines.push(kk + '=' + (v[kk] == null ? '' : String(v[kk]))); });
                     sections.push(lines.join(eol));
                 } else {
@@ -225,8 +227,8 @@
             return top.join(eol) + (top.length && sections.length ? eol + eol : '') + sections.join(eol + eol);
         },
         kv: (obj, pairDelim, kvDelim, eol) => {
-            var pd = pairDelim === '\\n' ? (eol || '\n') : pairDelim;
-            var out = [];
+            const pd = pairDelim === '\\n' ? (eol || '\n') : pairDelim;
+            const out = [];
             Object.keys(obj || {}).forEach(function(k) { out.push(k + kvDelim + (obj[k] == null ? '' : String(obj[k]))); });
             return out.join(pd);
         }
@@ -234,13 +236,13 @@
     
     // --- Main Actions ---
     function doParse() {
-        var mode = modeSel.value, input = inEl.value || '';
+        const mode = modeSel.value, input = inEl.value || '';
         try {
-            var out = '';
+            let out = '';
             switch (mode) {
                 case 'json':
-                    var obj = parsers.json(input);
-                    var indent = parseInt(optJson.indent.value || '2', 10);
+                    const obj = parsers.json(input);
+                    const indent = parseInt(optJson.indent.value || '2', 10);
                     out = stringifiers.json(obj, indent, optJson.sort.checked);
                     break;
                 case 'query':
@@ -248,7 +250,7 @@
                 case 'tsv':
                 case 'ini':
                 case 'kv':
-                    var data;
+                    let data;
                     if (mode === 'csv' || mode === 'tsv') {
                         data = parsers.csv(input, mode === 'tsv' ? '\\t' : optCsv.delim.value, optCsv.quote.value, optCsv.header.checked);
                     } else if (mode === 'kv') {
@@ -273,20 +275,20 @@
     }
 
     function doUnparse() {
-        var mode = modeSel.value, input = inEl.value || '';
+        const mode = modeSel.value, input = inEl.value || '';
         try {
-            var out = '';
-            var obj = (mode !== 'html' && mode !== 'url' && mode !== 'base64') ? JSON.parse(input) : null;
+            let out = '';
+            const obj = (mode !== 'html' && mode !== 'url' && mode !== 'base64') ? JSON.parse(input) : null;
 
             switch (mode) {
                 case 'json':
-                    var indent = parseInt(optJson.indent.value || '0', 10);
+                    const indent = parseInt(optJson.indent.value || '0', 10);
                     out = stringifiers.json(obj, indent, optJson.sort.checked);
                     break;
                 case 'query': out = stringifiers.query(obj, optQuery.sort.checked, optQuery.space.value); break;
                 case 'csv':
                 case 'tsv':
-                    var delim = mode === 'tsv' ? '\\t' : optCsv.delim.value;
+                    const delim = mode === 'tsv' ? '\\t' : optCsv.delim.value;
                     out = stringifiers.csv(obj, delim, optCsv.quote.value, optCsv.header.checked, eolValue());
                     break;
                 case 'ini': out = stringifiers.ini(obj, eolValue()); break;
@@ -306,12 +308,12 @@
     
     // --- Stats & Util Events ---
     function updateStats() {
-        var s = (text) => {
-            var bytes = new TextEncoder().encode(text).length;
-            var lines = text.length ? (text.match(/\r\n|\r|\n/g) || []).length + 1 : 0;
+        const s = (text) => {
+            const bytes = new TextEncoder().encode(text).length;
+            const lines = text.length ? (text.match(/\r\n|\r|\n/g) || []).length + 1 : 0;
             return { lines: lines, bytes: bytes };
         };
-        var s1 = s(inEl.value), s2 = s(outEl.value);
+        const s1 = s(inEl.value), s2 = s(outEl.value);
         inStats.textContent = `Lines: ${s1.lines} | Size: ${s1.bytes} bytes`;
         outStats.textContent = `Lines: ${s2.lines} | Size: ${s2.bytes} bytes`;
     }
@@ -327,12 +329,12 @@
         navigator.clipboard.writeText(outEl.value).then(() => feedback('Copied!'));
     });
     dlBtn.addEventListener('click', function() {
-        var data = outEl.value || '';
+        const data = outEl.value || '';
         if (!data) return;
-        var ext = {json: 'json', csv: 'csv', tsv: 'tsv', ini: 'ini'}[modeSel.value] || 'txt';
-        var blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
+        const ext = {json: 'json', csv: 'csv', tsv: 'tsv', ini: 'ini'}[modeSel.value] || 'txt';
+        const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
         a.href = url;
         a.download = 'output.' + ext;
         document.body.appendChild(a);
@@ -344,7 +346,7 @@
         updateStats(); inEl.focus();
     });
     swapBtn.addEventListener('click', function() {
-        var a = inEl.value, b = outEl.value;
+        const a = inEl.value, b = outEl.value;
         inEl.value = b; outEl.value = a;
         updateStats();
     });

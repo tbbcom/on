@@ -21,25 +21,68 @@
   function restoreFrom(json){const arr=JSON.parse(json);layers=arr.map(o=>{const L={...o};if(o.type==='raster'){const mk=d=>new Promise(r=>{if(!d)return r(null);const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);r(c)};i.src=d;});return Promise.all([mk(o.data),mk(o.mask)]).then(([d,m])=>{L.data=d;L.mask=m;return L;});}return L;});Promise.all(layers).then(v=>{layers=v;active=Math.min(active,layers.length-1);render();syncUI();syncHistory();});}
 
   // ---------- Sizing ----------
-  function fitCanvasToContainer(){const wrap=canvas.parentElement;const avail=wrap.clientWidth||window.innerWidth;const w=Math.max(360,Math.min(1400,Math.floor(avail-4)));const ar=canvas.height/canvas.width||9/16;const h=Math.max(320,Math.floor(w*ar));canvas.style.width=w+'px';canvas.style.height=h+'px';canvas.width=Math.floor(w*DPR);canvas.height=Math.floor(h*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);render();}
-  window.addEventListener('resize',fitCanvasToContainer);
+  function fitCanvasToContainer(){
+    const stage = document.querySelector('#ib-editor .ib-stage');
+    const wrap  = document.querySelector('#ib-editor .ib-canvas-wrap');
 
-  // ---------- Add layers ----------
-  function addRasterFromImage(img,name='Image'){const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);const L=baseLayer('raster',name);L.data=c;L.mask=document.createElement('canvas');L.mask.width=c.width;L.mask.height=c.height;L.mask.getContext('2d').fillStyle='#fff';L.mask.getContext('2d').fillRect(0,0,c.width,c.height);layers.push(L);active=layers.length-1;pushHistory();render();syncUI();}
-  function addBrushLayerIfNeeded(){const L=baseLayer('raster','Paint');L.data=document.createElement('canvas');L.data.width=Math.round(canvas.width/DPR);L.data.height=Math.round(canvas.height/DPR);layers.push(L);active=layers.length-1;}
-  function addShape(kind){const L=baseLayer('shape',kind.toUpperCase());L.shape={kind,color:$('#ib-color').value,size:+$('#ib-size').value};L.x=60;L.y=60;layers.push(L);active=layers.length-1;pushHistory();render();syncUI();}
-  function addTextAt(x,y){const L=baseLayer('text','Text');L.text={value:'Double-click to edit',color:$('#ib-color').value,size:36,weight:700,align:'left',baseline:'alphabetic',font:'system-ui'};L.x=x;L.y=y;layers.push(L);active=layers.length-1;pushHistory();render();syncUI();}
+    if (!canvas || !ctx) return;
+    if (!stage || !wrap) return; // wait until DOM exists
 
-  // ---------- Render ----------
-  function render(){const w=Math.round(canvas.width/DPR),h=Math.round(canvas.height/DPR);ctx.save();ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,w,h);
-    for(const L of layers){if(!L.visible)continue;ctx.globalAlpha=clamp(L.opacity,0,1);ctx.globalCompositeOperation=L.blend||'source-over';ctx.filter=toFilter(L.filter);
-      ctx.save();ctx.translate(L.x,L.y);ctx.rotate(rad(L.rot||0));ctx.scale(L.scale||1,L.scale||1);
-      if(L.type==='raster'&&L.data){if(L.mask){const off=document.createElement('canvas');off.width=L.data.width;off.height=L.data.height;const g=off.getContext('2d');g.drawImage(L.data,0,0);g.globalCompositeOperation='destination-in';g.drawImage(L.mask,0,0);ctx.drawImage(off,0,0);}else ctx.drawImage(L.data,0,0);}
-      else if(L.type==='shape'&&L.shape){ctx.fillStyle=L.shape.color;ctx.strokeStyle=L.shape.color;ctx.lineWidth=L.shape.size;if(L.shape.kind==='rect'){ctx.fillRect(0,0,200,140);}else if(L.shape.kind==='ellipse'){ctx.beginPath();ctx.ellipse(100,70,100,70,0,0,Math.PI*2);ctx.fill();}else if(L.shape.kind==='line'){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(220,0);ctx.stroke();}}
-      else if(L.type==='text'&&L.text){ctx.fillStyle=L.text.color;ctx.font=`${L.text.weight} ${L.text.size}px ${L.text.font}`;ctx.textAlign=L.text.align;ctx.textBaseline=L.text.baseline;ctx.fillText(L.text.value,0,0);}
-      ctx.restore();}
-    ctx.filter='none';ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.restore();
-    if(tool==='transform'&&layers[active]) drawHandles(layers[active]);
+    const rect = stage.getBoundingClientRect();
+    const cs   = getComputedStyle(stage);
+    const padX = (parseFloat(cs.paddingLeft)||0) + (parseFloat(cs.paddingRight)||0);
+
+    // Pick the largest sensible width from several sources
+    let avail = 0;
+    const candidates = [
+      (rect?.width || 0) - padX,
+      (stage.clientWidth || 0) - padX,
+      (wrap.getBoundingClientRect?.().width || 0),
+      (document.documentElement?.clientWidth || 0) * 0.6
+    ];
+    for (const v of candidates) if (isFinite(v) && v > 0) avail = Math.max(avail, v);
+
+    // Desktop guard: avoid tiny canvas if layout not ready
+    if (window.matchMedia && window.matchMedia('(min-width: 1024px)').matches) {
+      avail = Math.max(avail, 720);
+    }
+
+    const targetW = Math.floor(Math.min(1600, Math.max(360, avail)));
+    const ar      = (canvas.height / canvas.width) || (9/16);
+    const targetH = Math.floor(Math.max(320, targetW * ar));
+
+    // Apply CSS size
+    canvas.style.width  = targetW + 'px';
+    canvas.style.height = targetH + 'px';
+
+    // Backing store for HiDPI
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    canvas.width  = Math.floor(targetW * dpr);
+    canvas.height = Math.floor(targetH * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    render();
+  }
+
+  // Re-run sizing whenever layout changes (e.g. Blogger preview toggles)
+  function initSizing(){
+    const stageEl = document.querySelector('#ib-editor .ib-stage');
+    if (stageEl && 'ResizeObserver' in window) {
+      const ro = new ResizeObserver(() => fitCanvasToContainer());
+      ro.observe(stageEl);
+    }
+    window.addEventListener('resize', fitCanvasToContainer, { passive:true });
+    // Kick once after paint; repeat shortly in case fonts/layout settle late
+    requestAnimationFrame(() => {
+      fitCanvasToContainer();
+      setTimeout(fitCanvasToContainer, 50);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSizing, { once:true });
+  } else {
+    initSizing();
   }
 
   // ---------- Transform helpers ----------

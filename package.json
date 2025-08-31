@@ -1,0 +1,13 @@
+{
+  "name": "on",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "All about web developement",
+  "scripts": {
+    "lint": "eslint \"assets/js/*.js\"",
+    "test": "echo \"No tests specified\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

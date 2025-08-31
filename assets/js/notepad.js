@@ -232,16 +232,21 @@
 
   // Fullscreen
   const fullBtn = $('#ib-full', app);
+  document.addEventListener('fullscreenchange', () => {
+    const isFS = document.fullscreenElement === app;
+    fullBtn.textContent = isFS ? 'Exit Fullscreen' : 'Fullscreen';
+    // Force light theme in fullscreen for max readability on mobile
+    if (isFS) app.setAttribute('data-theme', 'light');
+    else app.removeAttribute('data-theme'); // fall back to system preference
+  });
   fullBtn.addEventListener('click', async () => {
     try {
-      document.addEventListener('fullscreenchange', () => {
-  const isFS = document.fullscreenElement === app;
-  fullBtn.textContent = isFS ? 'Exit Fullscreen' : 'Fullscreen';
-
-  // Force light theme in fullscreen for max readability on mobile
-  if (isFS) app.setAttribute('data-theme','light');
-  else app.removeAttribute('data-theme'); // fall back to system (or your site) preference
-});
+      if (document.fullscreenElement === app) await document.exitFullscreen();
+      else await app.requestFullscreen();
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
   // MD toggle
   const mdBtn = $('#ib-md-toggle', app);

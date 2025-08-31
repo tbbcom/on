@@ -246,11 +246,10 @@
   function copy(){
     const txt = output.textContent || '';
     if(!txt.trim()){ alert('Nothing to copy. Click Generate first.'); return; }
-    navigator.clipboard?.writeText(txt).then(()=>toast('Copied to clipboard ✅')).catch(()=>{
-      const ta = document.createElement('textarea');
-      ta.value = txt; document.body.appendChild(ta); ta.select();
-      try{ document.execCommand('copy'); toast('Copied to clipboard ✅'); } finally { ta.remove(); }
-    });
+    if(!navigator.clipboard){ toast('Clipboard API not supported.'); return; }
+    navigator.clipboard.writeText(txt)
+      .then(()=>toast('Copied to clipboard ✅'))
+      .catch(()=>toast('Failed to copy to clipboard ❌'));
   }
 
   function download(){

@@ -231,23 +231,16 @@
     function copyResult() {
         const val = els.output.value;
         if (!val) return;
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(val).then(() => {
-                els.stats.textContent = 'Result copied to clipboard.';
-            }).catch(() => fallbackCopy(val));
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(val)
+                .then(() => {
+                    els.stats.textContent = 'Result copied to clipboard.';
+                })
+                .catch(() => {
+                    els.stats.textContent = 'Failed to copy. Please copy manually.';
+                });
         } else {
-            fallbackCopy(val);
-        }
-        function fallbackCopy(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-                document.execCommand('copy');
-                els.stats.textContent = 'Result copied to clipboard.';
-            } catch (e) { }
-            document.body.removeChild(ta);
+            els.stats.textContent = 'Clipboard API not supported.';
         }
     }
 

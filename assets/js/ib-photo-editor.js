@@ -61,17 +61,35 @@
   }
 
   // ---------------- Canvas sizing ----------------
-  function fitCanvasToContainer() {
-    const wrap = canvas.parentElement;
-    const w = Math.min(1400, wrap.clientWidth - 4);
-    const ratio = canvas.height / canvas.width;
-    const h = Math.max(360, w * ratio);
-    const cssW = Math.floor(w), cssH = Math.floor(h);
-    canvas.style.width = cssW+'px'; canvas.style.height = cssH+'px';
-    canvas.width = Math.floor(cssW * DPR); canvas.height = Math.floor(cssH * DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    render();
-  }
+  function fitCanvasToContainer(){
+  const wrap = canvas.parentElement;                 // .ib-canvas-wrap
+  const editor = document.getElementById('ib-editor');
+  const main = editor.querySelector('.ib-main');
+
+  // Available width for the canvas column
+  const avail = wrap.clientWidth || main.clientWidth || editor.clientWidth || window.innerWidth;
+
+  // If grid gets tight (<980px total), assume stacked layout and use full width
+  const isCompact = editor.getBoundingClientRect().width < 980;
+  const targetW = Math.floor(Math.min(1400, (isCompact ? editor.clientWidth : avail) - 4));
+
+  // Keep aspect ratio of the internal canvas pixels
+  const ar = canvas.height / canvas.width || (9/16);
+  const targetH = Math.floor(Math.max(360, targetW * ar));
+
+  // Apply CSS size (logical)
+  canvas.style.width  = targetW + 'px';
+  canvas.style.height = targetH + 'px';
+
+  // Internal backing store for HiDPI
+  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  canvas.width  = Math.floor(targetW * DPR);
+  canvas.height = Math.floor(targetH * DPR);
+
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  render();
+}
+
   window.addEventListener('resize', fitCanvasToContainer);
 
   // ---------------- Import / Create ----------------

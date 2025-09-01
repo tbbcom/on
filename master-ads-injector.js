@@ -4,7 +4,6 @@ function masterAdController() {
   function excludeAutoAdZones() {
     const noAdSelectors = [
       'table',
-      '.sidebar-widget',
       '#header',
       '.custom-cta-box',
       '.tools-grid',

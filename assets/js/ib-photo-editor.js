@@ -1,22 +1,4 @@
 /* IB Photo Studio v1.0.3-transform — minimal UI + Blend + Transform */
-function fitCanvasToContainer() {
-  const container = $('.ib-canvas-wrap'); // Using your script's native selector
-  if (!container) return;
-
-  const style = window.getComputedStyle(container);
-  const paddingX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-  const paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-  
-  const newWidth = container.clientWidth - paddingX;
-  const newHeight = container.clientHeight - paddingY;
-
-  // Only resize if the size has actually changed, for performance
-  if (canvas.width !== newWidth || canvas.height !== newHeight) {
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-    render(); // This is the KEY: It tells the editor to redraw everything.
-  }
-}
 (() => {
   const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
   const canvas=$('#ib-canvas'), ctx=canvas.getContext('2d');
@@ -244,6 +226,6 @@ function fitCanvasToContainer() {
   canvas.addEventListener('dblclick',e=>{if(active<0||layers[active].type!=='text')return;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;const ta=$('#ib-textarea');ta.style.left=x+'px';ta.style.top=y+'px';ta.value=layers[active].text.value;ta.classList.remove('ib-hidden');ta.focus();const commit=()=>{layers[active].text.value=ta.value;ta.classList.add('ib-hidden');render();pushHistory();};ta.onblur=commit;ta.onkeydown=ev=>{if(ev.key==='Enter'&&(ev.ctrlKey||ev.metaKey)){ev.preventDefault();commit();}};});
 
   // init
-  $('#ib-new')?.click(); fitCanvasToContainer();window.addEventListener('resize', fitCanvasToContainer);
-  $('#ib-layer-del')?.addEventListener('click',()=>{if(active<0)return;layers.splice(active,1);active=Math.min(active,layers.length-1);pushHistory();render();syncUI();});
+  $('#ib-new')?.click();
+  fitCanvasToContainer();
 })();

@@ -227,4 +227,5 @@
 
   // init
   $('#ib-new')?.click(); fitCanvasToContainer();
+  $('#ib-layer-del')?.addEventListener('click',()=>{if(active<0)return;layers.splice(active,1);active=Math.min(active,layers.length-1);pushHistory();render();syncUI();});
 })();

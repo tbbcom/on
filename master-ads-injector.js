@@ -7,7 +7,9 @@ function masterAdController() {
       '.sidebar-widget',
       '#header',
       '.custom-cta-box',
-      '.related-posts'
+      '.tools-grid',
+      '.icontainer',
+      '.tool-card'
     ];
     const elementsToExclude = document.querySelectorAll(noAdSelectors.join(', '));
     elementsToExclude.forEach(el => el.classList.add('google_ad_mod'));

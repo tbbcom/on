@@ -219,7 +219,7 @@
 
   // Import/New/Export
   $('#ib-file')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;const img=new Image();img.onload=()=>{const r=img.height/img.width,w=Math.min(1400,Math.max(640,img.width)),h=Math.max(360,Math.round(w*r));canvas.width=w*DPR;canvas.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);fitCanvasToContainer();addRasterFromImage(img,f.name.replace(/\.[^.]+$/,''));pushHistory();};img.src=URL.createObjectURL(f);e.target.value='';});
-  $('#ib-new')?.addEventListener('click',()=>{layers=[];active=-1;canvas.width=1280*DPR;canvas.height=720*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);fitCanvasToContainer();pushHistory();render();syncUI();});
+  $('#ib-new')?.addEventListener('click',()=>{layers = []; active = -1; fitCanvasToContainer(); pushHistory('new'); render(); syncUI(); });
   $('#ib-export')?.addEventListener('click',()=>{const fmt=$('#ib-export-format').value,q=+$('#ib-export-quality').value||0.95;const a=document.createElement('a');a.download=`ib-image-${Date.now()}.${fmt.split('/')[1].replace('jpeg','jpg')}`;a.href=canvas.toDataURL(fmt,q);a.click();});
 
   // Text inline edit

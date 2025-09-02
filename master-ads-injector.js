@@ -8,7 +8,10 @@ function masterAdController() {
       '.custom-cta-box',
       '.tools-grid',
       '.icontainer',
-      '.tool-card'
+      '.tool-card',
+      '.recentpostsae',
+      '.recentpostnavfeed',
+      '.sitemap-wrapper'
     ];
     const elementsToExclude = document.querySelectorAll(noAdSelectors.join(', '));
     elementsToExclude.forEach(el => el.classList.add('google_ad_mod'));

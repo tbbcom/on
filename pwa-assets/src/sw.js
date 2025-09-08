@@ -6,7 +6,7 @@ const urlsToCache = [
   '/',
   '/offline.html'
   // Add any other core assets you want to pre-cache, like a logo
-  // '/https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEihLzpisEb1eD_aGOTNa0B9tfBk1k2iwOfDnl_gp66G6zuU2IWBdLbtzpy4ZkmefyVvan-ZbbAmiuPn4tkHEA4HjELHqQmdfQGV02ujPjAdTKBAlHnhOmEQ132AgV98tfDvXAym_5tnYnb0A1ACiA5MNjaxUoE_Po40U0cva4OqLsoBvyj7-GoTBW9pfJlU/s1600/1000041895.png'
+  // '/https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqjFdEWNgwNSHf8cuiBJ5SO6VLtkzs2xcmzsaEK7jELM2mLf5IB2oiMcnEQmeAzIokVd4pKnasNfrNAKj50Q8eGodMdghKT8EQVCc9ViaX7yebBtN_ByUgCGgZkF9KJp68K5l7xgovnldmexg9hdaPdA1TMb_4SVrfAuZ7TNY68vouUIHaE__kwBrL3mPF/s1600/bukit-besi-blog.webp'
 ];
 
 // Install event: fires when the service worker is first installed

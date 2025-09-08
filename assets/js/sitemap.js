@@ -1,4 +1,19 @@
 /**
+ * @copyright    Copyright (C) 2025 - 2026 TheBukitBesi. All rights reserved.
+ * @author       (https://thebukitbesi.com)
+ * @version      1.2.0
+ * @license      All Rights Reserved
+ * This source file is proprietary and confidential. Unauthorized copying,
+ * modification, distribution, or use of this file, via any medium, is
+ * strictly prohibited without the express written permission of the author.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ _____________________________________________________________________________
  * Blogger Categorized Sitemap with Enhanced Thumbnails
  * Ultra-lightweight, SEO Optimized with Rich Schema.org
  * 5-column desktop grid, larger thumbnails, mobile optimized
@@ -408,7 +423,7 @@
 
     function getEmojiForLabel(label) {
         const emojiMap = {
-            'resepi': '🍔', 'travel': '✈️', 'teknologi': '💻', 'komputer': '🖥️', 'birthday': '🎉', 'islamik': '🕌', 'islam': '🕋', 'kurier': '🚚', 'review': '⭐', 'kesihatan': '💪', 'direktori': '📌', 'pendidikan': '📚', 'berita': '📰', 'hiburan': '🎬', 'lokasi': '📍', 'masakan': '🍳', 'tutorial': '💡', 'bantuan kewangan': '💰', 'bantuan kerajaan': '🇲🇾', 'tempat menarik': '🏞️', 'penjagaan kucing': '🐱', 'makanan': '🍽️', 'minuman': '🥤', 'perniagaan': '💼', 'kerjaya': '👔', 'keluarga': '👨‍👩‍👧‍👦', 'kecantikan': '💄', 'fesyen': '👗', 'sukan': '⚽', 'permainan': '🎮', 'muzik': '🎵', 'filem': '🎥', 'buku': '📖', 'sejarah': '🏛️', 'sains': '🔬', 'alam sekitar': '🌿'
+            'resepi': '🍔', 'travel': '✈️', 'teknologi': '💻', 'komputer': '🖥️', 'birthday': '🎉', 'islamik': '🕌', 'kurier': '🚚', 'review': '⭐', 'kesihatan': '💪', 'direktori': '📌', 'pendidikan': '📚', 'berita': '📰', 'hiburan': '🎬', 'lokasi': '📍', 'masakan': '🍳', 'tutorial': '💡', 'bantuan kewangan': '💰', 'bantuan kerajaan': '🇲🇾', 'tempat menarik': '🏞️', 'penjagaan kucing': '🐱', 'makanan': '🍽️', 'minuman': '🥤', 'perniagaan': '💼', 'kerjaya': '👔', 'keluarga': '👨‍👩‍👧‍👦', 'kecantikan': '💄', 'fesyen': '👗', 'sukan': '⚽', 'permainan': '🎮', 'muzik': '🎵', 'filem': '🎥', 'buku': '📖', 'sejarah': '🏛️', 'sains': '🔬', 'alam sekitar': '🌿'
         };
         const lowerLabel = label.toLowerCase();
         if (emojiMap[lowerLabel]) return emojiMap[lowerLabel];

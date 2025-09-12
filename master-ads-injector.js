@@ -11,7 +11,8 @@ function masterAdController() {
       '.tool-card',
       '.recentpostsae',
       '.recentpostnavfeed',
-      '.sitemap-wrapper'
+      '.sitemap-wrapper',
+      '.footer-sections'
     ];
     const elementsToExclude = document.querySelectorAll(noAdSelectors.join(', '));
     elementsToExclude.forEach(el => el.classList.add('google_ad_mod'));

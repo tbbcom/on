@@ -1,0 +1,10 @@
+# In your wrangler.toml file
+
+name = "tbb-sw"
+# This is CORRECT. It matches your Cloudflare Worker's name.
+
+main = "sw.js"
+# UPDATE THIS. This tells Wrangler your main code is in the file named "sw.js" at the top level of your repository.
+
+compatibility_date = "2025-09-13"
+# BEST PRACTICE: Update this to today's date to use the latest features.

@@ -5,7 +5,7 @@
  * All Rights Reserved. Unauthorized copying, distribution, or use of this code is strictly prohibited.
  * For inquiries, contact https://thebukitbesi.com
  */
-function () {
+(function () {
   "use strict";
 
   // DOM

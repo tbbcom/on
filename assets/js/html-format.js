@@ -1,4 +1,3 @@
-
 /**
  * HTML Formatter
  * © 2025 The Bukit Besi

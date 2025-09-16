@@ -4,9 +4,6 @@
  * All Rights Reserved. Unauthorized copying, distribution, or use of this code is strictly prohibited.
  * For inquiries, contact https://thebukitbesi.com
  */
-
-// ... your calculator code starts here
-(function(){
  // --- TAB HANDLER ---
  const tabs=document.querySelectorAll(".itab");
  const contents=document.querySelectorAll(".tab-content");

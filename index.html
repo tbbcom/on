@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="All about The Bukit Besi & The Digital Platform's Site Development">
+    <meta name="theme-color" content="#2573eb">
+    <title>The Bukit Besi's Site</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="https://tbbcom.github.io/on/manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://tbbcom.github.io/on/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌿 The Bukit Besi Blog</h1>
+            <p class="subtitle">The Bukit Besi's Site Development</p>
+        </header>
+        
+        <main>
+            <section class="welcome">
+                <h2>Welcome to Our Site</h2>
+                <p>Discover everything you need to know about The Bukit Besi's site development, including Progressive Web App features for offline access.</p>
+            </section>
+            
+            <section class="features">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>📱 Progressive Web App</h3>
+                        <p>Install on your device and access content offline</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3> Terengganu</h3>
+                        <p>Best places to visit in Terengganu</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🏡 History of Iron Mining in Bukit Besi</h3>
+                        <p>The world famous iron mining</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔧 Resources</h3>
+                        <p>Tools and resources for your projects</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="pwa-status">
+                <h2>PWA Status</h2>
+                <p id="sw-status">Checking service worker status...</p>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 <a href="https://www.thebukitbesi.com" target="_blank">The Bukit Besi Project</a></p>
+        </footer>
+    </div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://tbbcom.github.io/on/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered successfully:', registration);
+                        document.getElementById('sw-status').textContent = 
+                            '✅ Service Worker registered successfully! PWA is ready.';
+                        document.getElementById('sw-status').style.color = '#4CAF50';
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                        document.getElementById('sw-status').textContent = 
+                            '❌ Service Worker registration failed: ' + error.message;
+                        document.getElementById('sw-status').style.color = '#f44336';
+                    });
+            });
+        } else {
+            document.getElementById('sw-status').textContent = 
+                '⚠️ Service Workers are not supported in this browser.';
+            document.getElementById('sw-status').style.color = '#ff9800';
+        }
+        
+        // Handle install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA install prompt available');
+        });
+    </script>
+</body>
+</html>

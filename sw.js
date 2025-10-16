@@ -1,64 +1,87 @@
-// Service Worker for The Bukit Besi PWA
-const CACHE_NAME = thebukitbesi-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/styles.css'
+/* TheBukitBesi PWA SW (classic) — GitHub Pages safe, no external imports */
+const VERSION = 'v1.0.3';
+const STATIC_CACHE = `tbb-static-${VERSION}`;
+const RUNTIME_CACHE = `tbb-runtime-${VERSION}`;
+const OFFLINE_URL = 'https://tbbcom.github.io/on/offline.html'; 
+
+// Precache only small, immutable assets. Avoid huge caches on GitHub Pages.
+const PRECACHE_URLS = [
+  'https://tbbcom.github.io/on/',   
+  'https://tbbcom.github.io/on/index.html',   
+  'https://tbbcom.github.io/on/offline.html',
+  'https://tbbcom.github.io/on/manifest.json', 
+  'https://tbbcom.github.io/on/pwa-assets/src/icon-192.png',   // optional
+  'https://tbbcom.github.io/on/pwa-assets/src/icon-512.png'    // optional
 ];
 
-// Install event - cache resources
+// ---- Install
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Caching files');
-        return cache.addAll(urlsToCache);
-      })
-      .catch((err) => {
-        console.log('Service Worker: Cache failed', err);
-      })
+    caches.open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate event - clean up old caches
+// ---- Activate (cleanup old caches)
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Clearing old cache');
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => {
+        if (![STATIC_CACHE, RUNTIME_CACHE].includes(key)) {
+          return caches.delete(key);
+        }
+      }))
+    ).then(() => self.clients.claim())
   );
 });
 
-// Fetch event - serve from cache when offline
+// ---- Fetch strategy
 self.addEventListener('fetch', (event) => {
-  console.log('Service Worker: Fetching', event.request.url);
+  const req = event.request;
+
+  // Only handle GET
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+
+  // Same-origin HTML: Network-first with offline fallback
+  if (url.origin === self.location.origin && req.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const resClone = res.clone();
+          caches.open(RUNTIME_CACHE).then((c) => c.put(req, resClone));
+          return res;
+        })
+        .catch(() => caches.match(req).then((r) => r || caches.match(OFFLINE_URL)))
+    );
+    return;
+  }
+
+  // Same-origin assets: Cache-first
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(req).then((cached) => cached || fetch(req).then((res) => {
+        const resClone = res.clone();
+        caches.open(RUNTIME_CACHE).then((c) => c.put(req, resClone));
+        return res;
+      }))
+    );
+    return;
+  }
+
+  // Cross-origin (CDN/fonts/api): Network-first with fallback to cache
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request)
-          .then((fetchResponse) => {
-            // Cache new requests
-            return caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, fetchResponse.clone());
-                return fetchResponse;
-              });
-          });
-      })
-      .catch(() => {
-        // Return a custom offline page if available
-        console.log('Service Worker: Fetch failed, offline mode');
-      })
+    fetch(req).then((res) => {
+      const resClone = res.clone();
+      caches.open(RUNTIME_CACHE).then((c) => c.put(req, resClone));
+      return res;
+    }).catch(() => caches.match(req))
   );
+});
+
+// ---- Optional: message to force update
+self.addEventListener('message', (e) => {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });

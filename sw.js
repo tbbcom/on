@@ -1,74 +1,64 @@
-// Define a cache name for versioning
-const CACHE_NAME = 'thebukitbesi-cache-v1';
-
-// List of files to cache on install
+// Service Worker for The Bukit Besi PWA
+const CACHE_NAME = the'bukitbesi-cache-v1';
 const urlsToCache = [
   '/',
-  '/offline.html'
-  // Add any other core assets you want to pre-cache, like a logo
-  // '/https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqjFdEWNgwNSHf8cuiBJ5SO6VLtkzs2xcmzsaEK7jELM2mLf5IB2oiMcnEQmeAzIokVd4pKnasNfrNAKj50Q8eGodMdghKT8EQVCc9ViaX7yebBtN_ByUgCGgZkF9KJp68K5l7xgovnldmexg9hdaPdA1TMb_4SVrfAuZ7TNY68vouUIHaE__kwBrL3mPF/s1600/bukit-besi-blog.webp'
+  '/index.html',
+  '/manifest.json',
+  '/styles.css'
 ];
 
-// Install event: fires when the service worker is first installed
-self.addEventListener('install', event => {
+// Install event - cache resources
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
+      .then((cache) => {
+        console.log('Service Worker: Caching files');
         return cache.addAll(urlsToCache);
       })
-  );
-});
-
-// Fetch event: fires for every network request
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return the response from cache
-        if (response) {
-          return response;
-        }
-
-        // Not in cache - fetch from network, cache it, and then return it
-        return fetch(event.request).then(
-          networkResponse => {
-            // Check if we received a valid response
-            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-              return networkResponse;
-            }
-
-            // Clone the response because it's a stream and can only be consumed once
-            const responseToCache = networkResponse.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return networkResponse;
-          }
-        );
-      })
-      .catch(() => {
-        // If both cache and network fail (e.g., offline), show the offline page
-        return caches.match('/offline.html');
+      .catch((err) => {
+        console.log('Service Worker: Cache failed', err);
       })
   );
 });
 
-// Activate event: clean up old caches
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activating...');
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('Service Worker: Clearing old cache');
+            return caches.delete(cache);
           }
         })
       );
     })
+  );
+});
+
+// Fetch event - serve from cache when offline
+self.addEventListener('fetch', (event) => {
+  console.log('Service Worker: Fetching', event.request.url);
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Return cached version or fetch from network
+        return response || fetch(event.request)
+          .then((fetchResponse) => {
+            // Cache new requests
+            return caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, fetchResponse.clone());
+                return fetchResponse;
+              });
+          });
+      })
+      .catch(() => {
+        // Return a custom offline page if available
+        console.log('Service Worker: Fetch failed, offline mode');
+      })
   );
 });

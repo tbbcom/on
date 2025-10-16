@@ -1,5 +1,5 @@
 // Service Worker for The Bukit Besi PWA
-const CACHE_NAME = the'bukitbesi-cache-v1';
+const CACHE_NAME = thebukitbesi-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',

@@ -2,16 +2,14 @@
 const VERSION = 'v1.0.3';
 const STATIC_CACHE = `tbb-static-${VERSION}`;
 const RUNTIME_CACHE = `tbb-runtime-${VERSION}`;
-const OFFLINE_URL = 'https://tbbcom.github.io/on/offline.html'; 
-
-// Precache only small, immutable assets. Avoid huge caches on GitHub Pages.
+const OFFLINE_URL = './offline.html';
 const PRECACHE_URLS = [
-  'https://tbbcom.github.io/on/',   
-  'https://tbbcom.github.io/on/index.html',   
-  'https://tbbcom.github.io/on/offline.html',
-  'https://tbbcom.github.io/on/manifest.json', 
-  'https://tbbcom.github.io/on/pwa-assets/src/icon-192.png',   // optional
-  'https://tbbcom.github.io/on/pwa-assets/src/icon-512.png'    // optional
+  './',                      // root of the SW scope (e.g. /on/)
+  './index.html',
+  './offline.html',
+  './manifest.json',
+  './pwa-assets/src/icon-192.png',   // optional
+  './pwa-assets/src/icon-512.png'    // optional
 ];
 
 // ---- Install

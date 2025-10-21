@@ -9,7 +9,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: linear-gradient(135deg, #e8f5e9 0%, #1A759F 100%);
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
     min-height: 100vh;
 }
 
@@ -30,7 +30,7 @@ header {
 
 header h1 {
     font-size: 3em;
-    color: #0D1321;
+    color: #010101;
     margin-bottom: 10px;
 }
 
@@ -56,7 +56,7 @@ section:last-child {
 }
 
 h2 {
-    color: #0D1321;
+    color: #010101;
     margin-bottom: 20px;
     font-size: 2em;
 }
@@ -83,7 +83,7 @@ h3 {
     background: #f1f8f4;
     padding: 25px;
     border-radius: 10px;
-    border-left: 4px solid #0D1321;
+    border-left: 4px solid #4CAF50;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -152,7 +152,7 @@ footer {
 /* PWA Install Button (if needed) */
 .install-button {
     display: none;
-    background: #0D1321;
+    background: #4CAF50;
     color: white;
     border: none;
     padding: 15px 30px;
@@ -164,7 +164,7 @@ footer {
 }
 
 .install-button:hover {
-    background: #1A759F;
+    background: #45a049;
 }
 
 .install-button.show {
